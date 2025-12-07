@@ -1,0 +1,18 @@
+# 儲存病人快取
+SET patient:1 "{ 'name': '王小明', 'phone': '0900123456' }"
+
+# 查詢病人資料
+GET patient:1
+
+# 寫入熱門科別統計
+HSET department_count internal 10
+HSET department_count surgery 3
+
+# 查詢所有科別統計
+HGETALL department_count
+
+# 記錄最近操作日誌（list）
+LPUSH system_logs "user 1 viewed record 5"
+
+# 取最新紀錄
+LRANGE system_logs 0 5

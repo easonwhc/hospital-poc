@@ -1,0 +1,50 @@
+{
+    "find_images_by_record_id": {
+        "description": "查詢指定病歷（record_id）的所有檢驗影像",
+        "collection": "fs.files",
+        "query": {
+            "metadata.record_id": "1"
+        }
+    },
+    "insert_image_gridfs": {
+        "description": "插入影像至 GridFS（示意）",
+        "note": "實際插入需透過 MongoDB 驅動，如 PHP 的 GridFSBucket API",
+        "example_php": " $bucket->uploadFromStream($filename, $fileStream, ['metadata' => ['record_id' => '1']]); "
+    },
+    "delete_image": {
+        "description": "刪除影像（依 file_id）",
+        "collection": "fs.files",
+        "query": {
+            "_id": {
+                "$oid": "<file_id>"
+            }
+        }
+    },
+    "update_metadata": {
+        "description": "更新影像的 metadata（例如重新標記 record_id）",
+        "collection": "fs.files",
+        "operation": {
+            "$set": {
+                "metadata.record_id": "2"
+            }
+        }
+    },
+    "aggregate_group_by_record": {
+        "description": "使用 aggregate 統計每個病歷有多少張影像（加分）",
+        "pipeline": [
+            {
+                "$group": {
+                    "_id": "$metadata.record_id",
+                    "count": {
+                        "$sum": 1
+                    }
+                }
+            },
+            {
+                "$sort": {
+                    "count": -1
+                }
+            }
+        ]
+    }
+}
